@@ -196,7 +196,8 @@ def evaluate_submission(submission_id: str):
             "model_answer": q.model_answer,
             "ai_score": grade_res["ai_score"],
             "suggested_marks": grade_res["suggested_marks"],
-            "final_score": grade_res["suggested_marks"],
+            "final_score": None,
+            "final_marks": None,
             "max_score": grade_res["max_score"],
             "confidence_score": grade_res["confidence_score"],
             "semantic_similarity": grade_res["semantic_similarity"],
@@ -212,7 +213,12 @@ def evaluate_submission(submission_id: str):
             "revision_topics": feedback_res["revision_topics"],
             "warnings": grade_res["warnings"],
             "grading_method": grade_res["grading_method"],
+            "status": "ai_suggested",
             "is_moderated": False,
+            "reviewed_by": None,
+            "reviewed_at": None,
+            "moderation_reason": None,
+            "moderation_history": [],
             "evaluated_at": datetime.now(timezone.utc).isoformat()
         }
 
