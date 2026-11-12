@@ -33,6 +33,21 @@ def _populate_initial_evaluations():
             if eval_data:
                 eval_id = f"eval-{ans.get('question_id')}-{sub.get('id')}"
                 if eval_id not in _EVALUATIONS_STORE:
+                    is_mod = eval_data.get("is_moderated", False)
+                    mod_info = eval_data.get("moderation")
+                    status_val = "faculty_reviewed" if is_mod else "ai_suggested"
+                    final_val = mod_info.get("adjusted_score") if mod_info else None
+                    history = []
+                    if mod_info:
+                        history.append({
+                            "reviewed_by": mod_info.get("moderator_id", "FAC_PROF_SHARMA"),
+                            "original_suggested_marks": eval_data.get("ai_score"),
+                            "final_marks": mod_info.get("adjusted_score"),
+                            "moderation_reason": mod_info.get("reason", "Partial credit awarded"),
+                            "status": "faculty_reviewed",
+                            "reviewed_at": datetime.now(timezone.utc).isoformat()
+                        })
+
                     _EVALUATIONS_STORE[eval_id] = {
                         "id": eval_id,
                         "submission_id": sub.get("id"),
@@ -52,8 +67,13 @@ def _populate_initial_evaluations():
                         "missing_concepts": eval_data.get("areas_for_improvement", []),
                         "supporting_evidence": [ans.get("student_answer_text", "")[:120]],
                         "grading_method": "deterministic_rubric_v3",
-                        "is_moderated": eval_data.get("is_moderated", False),
-                        "final_score": eval_data.get("moderation", {}).get("adjusted_score", eval_data.get("ai_score")),
+                        "status": status_val,
+                        "is_moderated": is_mod,
+                        "final_score": final_val,
+                        "final_marks": final_val,
+                        "reviewed_by": mod_info.get("moderator_id") if mod_info else None,
+                        "moderation_reason": mod_info.get("reason") if mod_info else None,
+                        "moderation_history": history,
                         "evaluated_at": datetime.now(timezone.utc).isoformat()
                     }
 

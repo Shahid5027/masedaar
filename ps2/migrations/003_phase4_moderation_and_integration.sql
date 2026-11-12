@@ -37,3 +37,4 @@ WHERE original_suggested_marks IS NULL;
 -- 3. INDEXES FOR CROSS-MODULE INTEGRATION (PS1 Weak Topics & PS3 Analytics)
 CREATE INDEX IF NOT EXISTS idx_evaluations_status ON public.evaluations(status);
 CREATE INDEX IF NOT EXISTS idx_evaluations_reviewed_at ON public.evaluations(reviewed_at);
+
