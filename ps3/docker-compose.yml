@@ -1,0 +1,70 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-educore_ps3}
+      POSTGRES_USER: ${POSTGRES_USER:-educore_app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in environment}
+    volumes:
+      - ps3_pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-educore_app} -d ${POSTGRES_DB:-educore_ps3}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      APP_ENV: ${APP_ENV:-production}
+      DATABASE_URL: postgresql+psycopg2://${POSTGRES_USER:-educore_app}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-educore_ps3}
+      CORS_ORIGINS: ${CORS_ORIGINS:-https://ps3.example.edu}
+      COOKIE_SECURE: ${COOKIE_SECURE:-true}
+      COOKIE_SAMESITE: ${COOKIE_SAMESITE:-lax}
+      ENABLE_HSTS: ${ENABLE_HSTS:-true}
+      DOCS_ENABLED: ${DOCS_ENABLED:-false}
+      SESSION_TTL_MINUTES: ${SESSION_TTL_MINUTES:-60}
+      SESSION_MAX_LIFETIME_HOURS: ${SESSION_MAX_LIFETIME_HOURS:-12}
+      PASSWORD_MIN_LENGTH: ${PASSWORD_MIN_LENGTH:-10}
+      NOTIFICATION_EMAIL_TRANSPORT: ${NOTIFICATION_EMAIL_TRANSPORT:-disabled}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USERNAME: ${SMTP_USERNAME:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL:-no-reply@educore.local}
+      SMTP_USE_TLS: ${SMTP_USE_TLS:-true}
+      FOLLOW_UP_APPROACHING_HOURS: ${FOLLOW_UP_APPROACHING_HOURS:-24}
+      BOOTSTRAP_ADMIN_USERNAME: ${BOOTSTRAP_ADMIN_USERNAME:-}
+      BOOTSTRAP_ADMIN_EMAIL: ${BOOTSTRAP_ADMIN_EMAIL:-}
+      BOOTSTRAP_ADMIN_FULL_NAME: ${BOOTSTRAP_ADMIN_FULL_NAME:-}
+      BOOTSTRAP_ADMIN_PASSWORD: ${BOOTSTRAP_ADMIN_PASSWORD:-}
+    volumes:
+      - ps3_model_artifacts:/app/artifacts
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-/api/ps3}
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-/api/ps3}
+    ports:
+      - "3000:3000"
+
+volumes:
+  ps3_pg_data:
+  ps3_model_artifacts:

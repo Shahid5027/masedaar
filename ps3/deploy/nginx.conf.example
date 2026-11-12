@@ -1,0 +1,49 @@
+# Example TLS Reverse Proxy Configuration for EDUCORE AI PS3
+# Terminate TLS at Nginx and forward traffic over internal Docker / private network.
+
+server {
+    listen 80;
+    server_name ps3.example.edu;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name ps3.example.edu;
+
+    ssl_certificate     /etc/letsencrypt/live/ps3.example.edu/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/ps3.example.edu/privkey.pem;
+    ssl_protocols       TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers on;
+
+    # Security headers reinforced at reverse proxy
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+
+    client_max_body_size 15M;
+
+    # FastAPI backend API
+    location /api/ps3/ {
+        proxy_pass http://127.0.0.1:8000/api/ps3/;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_read_timeout 60s;
+    }
+
+    # Next.js frontend UI
+    location / {
+        proxy_pass http://127.0.0.1:3000/;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+
