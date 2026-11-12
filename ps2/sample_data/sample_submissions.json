@@ -1,0 +1,110 @@
+[
+  {
+    "id": "sub-1001-aaaa-bbbb-cccc-dddddddddddd",
+    "assessment_id": "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
+    "student_id": "EDU_STU_2026_014",
+    "student_name": "Aarav Sharma",
+    "status": "evaluated",
+    "total_score": 44.5,
+    "submitted_at": "2026-11-12T09:30:00Z",
+    "answers": [
+      {
+        "question_id": "q1111111-1111-1111-1111-111111111111",
+        "student_answer_text": "Red-Black Trees maintain balance through node color properties and rotations. Every node is colored red or black, root is always black, NIL leaves are black. Red nodes cannot have red children, and every path from root to leaf has the exact same black height bh. When adding a new node, it is initially colored red. If its uncle is red, we recolor parent and uncle to black and grandparent to red. If uncle is black, we perform single rotation (left/right) or double rotation depending on zig-zag alignment. Because no path has more than double the nodes of the shortest black-only path, height is strictly bounded by 2*log2(n+1), ensuring O(log n) operations.",
+        "evaluations": {
+          "ai_score": 23.5,
+          "max_score": 25.0,
+          "confidence_score": 0.94,
+          "semantic_similarity": 0.912,
+          "feedback": "Comprehensive and clear explanation covering invariants, color flips, and rotational mechanics. Proof outline correctly utilizes black-height ratio limits.",
+          "strengths": [
+            "Accurate enumeration of 5 red-black properties",
+            "Clear delineation of uncle color branching logic",
+            "Correct height upper bound formula"
+          ],
+          "areas_for_improvement": [
+            "Include explicit diagram or step-by-step state transition for double rotation"
+          ],
+          "is_moderated": false
+        }
+      },
+      {
+        "question_id": "q2222222-2222-2222-2222-222222222222",
+        "student_answer_text": "MESI stands for Modified, Exclusive, Shared, and Invalid. In Modified, the cache line has exclusive dirty copy and memory is out of date. Exclusive means clean copy only in this cache. Shared means clean copy replicated in multiple caches. Invalid means line cannot be read. When a read miss occurs, a BusRd message is sent. If another cache has line in M state, it writes it back to RAM and switches to S state. When a write occurs, BusRdX is dispatched, forcing all other peer caches holding that line to move to Invalid.",
+        "evaluations": {
+          "ai_score": 21.0,
+          "max_score": 25.0,
+          "confidence_score": 0.91,
+          "semantic_similarity": 0.887,
+          "feedback": "Solid grasp of the four states and bus transaction reactions. Well explained cache line flushing and invalidation.",
+          "strengths": [
+            "Accurate dirty vs clean cache state distinction",
+            "Correct BusRd and BusRdX mapping to state transitions"
+          ],
+          "areas_for_improvement": [
+            "Explain what happens on a local write-hit to a line currently in Shared state (BusUpgr transaction)"
+          ],
+          "is_moderated": false
+        }
+      }
+    ]
+  },
+  {
+    "id": "sub-1002-eeee-ffff-1111-222222222222",
+    "assessment_id": "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
+    "student_id": "EDU_STU_2026_042",
+    "student_name": "Priya Nair",
+    "status": "flagged_for_review",
+    "total_score": 33.0,
+    "submitted_at": "2026-11-12T09:45:10Z",
+    "answers": [
+      {
+        "question_id": "q1111111-1111-1111-1111-111111111111",
+        "student_answer_text": "In Red Black Trees, nodes have colors red and black. It stays balanced because height is O(log n). If uncle is red we recolor nodes. If uncle is black we do rotations. The tree does not allow two red nodes together.",
+        "evaluations": {
+          "ai_score": 15.0,
+          "max_score": 25.0,
+          "confidence_score": 0.72,
+          "semantic_similarity": 0.68,
+          "feedback": "Basic understanding is demonstrated but lacks depth. Black-height invariant is omitted and mathematical proof of height is missing.",
+          "strengths": [
+            "Recognizes no adjacent red nodes rule",
+            "Identifies uncle recoloring"
+          ],
+          "areas_for_improvement": [
+            "Define black-height formal constraint",
+            "Provide mathematical justification for the 2*log(n) height bound"
+          ],
+          "is_moderated": true,
+          "moderation": {
+            "moderator_id": "FAC_PROF_SHARMA",
+            "original_score": 15.0,
+            "adjusted_score": 16.5,
+            "reason": "Student intuitively captured rotation necessity; partial credit awarded for conciseness."
+          }
+        }
+      },
+      {
+        "question_id": "q2222222-2222-2222-2222-222222222222",
+        "student_answer_text": "MESI protocol has 4 states: Modified, Exclusive, Shared, Invalid. When someone writes to a cache line, it invalidates everyone else. Reading gets shared if others have it.",
+        "evaluations": {
+          "ai_score": 18.0,
+          "max_score": 25.0,
+          "confidence_score": 0.78,
+          "semantic_similarity": 0.74,
+          "feedback": "Correct definition of acronym and summary of invalidation, but missing bus transaction types (BusRd, BusRdX) and dirty line flush mechanism.",
+          "strengths": [
+            "Correct state names",
+            "Correct basic invalidation principle"
+          ],
+          "areas_for_improvement": [
+            "Detail bus snoop messages",
+            "Explain write-back memory synchronization"
+          ],
+          "is_moderated": false
+        }
+      }
+    ]
+  }
+]
+

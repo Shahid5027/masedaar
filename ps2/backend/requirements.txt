@@ -1,0 +1,30 @@
+# ==========================================
+# EDUCORE AI PS2 - Backend Dependencies
+# ==========================================
+
+# Core Web Framework
+fastapi>=0.110.0
+uvicorn[standard]>=0.28.0
+pydantic>=2.6.0
+pydantic-settings>=2.2.0
+python-multipart>=0.0.9
+python-dotenv>=1.0.1
+httpx>=0.27.0
+
+# Database & Storage
+supabase>=2.3.0
+
+# Document Extraction & OCR
+pymupdf>=1.24.0
+pypdf>=4.1.0
+
+# Testing
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
+
+# AI / ML Scaffolding (Sentence Transformers & ML stack)
+sentence-transformers>=3.0.0
+scikit-learn>=1.4.0
+scipy>=1.12.0
+numpy>=1.26.0
+

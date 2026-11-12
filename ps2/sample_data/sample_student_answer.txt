@@ -1,0 +1,65 @@
+STUDENT ID: EDU_STU_2026_089
+STUDENT NAME: Rohan Verma
+COURSE: CS-301 Advanced Data Structures & Algorithms
+ASSESSMENT: Mid-Term Subjective Evaluation
+
+============================================================
+QUESTION 1:
+Explain the self-balancing mechanism of Red-Black Trees during insertion.
+Specifically discuss color flips vs. tree rotations, and prove the maximum height property O(log n).
+
+ANSWER:
+A Red-Black Tree is a binary search tree where each node holds an extra color bit (either Red or Black).
+To maintain self-balancing guarantees, it enforces 5 fundamental invariants:
+1. Every node is either Red or Black.
+2. The root node is always Black.
+3. Every leaf node (NIL representation) is Black.
+4. If a node is Red, then both of its children must be Black (no consecutive red nodes permitted).
+5. For each node, every simple path from this node to any descendant NIL leaf contains identical numbers of black nodes, termed the black-height bh(x).
+
+When inserting a new key into the tree, the node is initially placed as a Red node. If its parent is Black, all invariants are preserved. However, if the parent is Red, a double-red violation occurs. We resolve this by examining the newly inserted node's uncle (the parent's sibling):
+
+Case 1: Uncle is Red (Color Flip / Recoloring)
+Both the parent and uncle are flipped to Black, while the grandparent is recolored Red. The violation may then propagate up to the grandparent, which is checked recursively.
+
+Case 2: Uncle is Black (Zig-Zag configuration)
+A rotation (Left-Right or Right-Left) is performed on the parent to align the nodes into a straight line (Zig-Zig), transforming into Case 3.
+
+Case 3: Uncle is Black (Zig-Zig linear configuration)
+A single rotation (Left or Right) around the grandparent is executed, followed by swapping the colors of parent and grandparent.
+
+Height Bound & Asymptotic Proof:
+Let bh(x) denote black-height. Any subtree rooted at x with black-height bh(x) contains at least 2^(bh(x)) - 1 internal nodes.
+Since no path may contain two consecutive red nodes, the longest simple path contains at most twice the number of nodes as the shortest path (all black). Hence, total height h satisfies h <= 2 * bh(root).
+Combining these yields n >= 2^(h/2) - 1, which implies h <= 2 * log2(n + 1).
+Thus, all search, insert, and delete operations are strictly bounded by O(log n).
+
+============================================================
+QUESTION 2:
+Describe the MESI cache coherence protocol. Outline the four states and explain what happens during a bus read and a bus write from the perspective of an invalidating snooping cache.
+
+ANSWER:
+The MESI protocol (also known as the Illinois protocol) is a hardware cache coherence protocol widely adopted in write-back multiprocessor configurations. It maintains cache consistency across shared buses using four distinct states:
+
+1. Modified (M):
+The cache line is present exclusively in the current cache and has been modified (dirty). It differs from main memory, and the current cache holds the sole responsibility of writing it back to main memory upon eviction.
+
+2. Exclusive (E):
+The cache line is present only in the current cache and is clean (matches main memory). It can be silently transitioned to Modified on a local write without generating bus traffic.
+
+3. Shared (S):
+The cache line is clean, matches main memory, and is potentially present in other processors' caches as well. It provides read-only access.
+
+4. Invalid (I):
+The cache line does not contain valid data and cannot be used for read or write operations.
+
+Snooping Bus Transactions:
+- Bus Read (BusRd):
+When processor A experiences a read miss, it broadcasts BusRd. Other peer caches snoop this address. If processor B holds the line in 'Modified' state, processor B snarf-intervenes, writes the line back to main memory, and downgrades its local state to 'Shared'. Processor A receives the line and transitions to 'Shared'. If no other cache has the line, processor A transitions directly to 'Exclusive'.
+
+- Bus Write (BusRdX / BusInval):
+When processor A wants to write to a line:
+- If processor A already has the line in 'Shared', it issues a BusInval message. All peer caches snooping this address invalidate their local copy (transitioning to Invalid). Processor A promotes to 'Modified'.
+- If processor A had a write miss (line was Invalid), it broadcasts a BusRdX (Read with Intent to Modify). All peers invalidate their copy, any dirty line is flushed, and processor A loads the data directly into state 'Modified'.
+This guarantees serialized sequential consistency across symmetric multiprocessing architectures.
+

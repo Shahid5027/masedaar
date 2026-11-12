@@ -1,0 +1,108 @@
+{
+  "id": "a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
+  "title": "Data Structures & Systems Architecture Mid-Term",
+  "course_code": "CS-301",
+  "course_name": "Advanced Data Structures & Algorithms",
+  "faculty_id": "FAC_PROF_SHARMA",
+  "description": "Formative subjective evaluation testing fundamental comprehension of tree balancing, algorithmic complexity, and cache coherence.",
+  "max_score": 50.0,
+  "passing_score": 25.0,
+  "duration_minutes": 60,
+  "status": "published",
+  "questions": [
+    {
+      "id": "q1111111-1111-1111-1111-111111111111",
+      "question_number": 1,
+      "question_text": "Explain the self-balancing mechanism of Red-Black Trees during insertion. Specifically discuss color flips vs. tree rotations, and prove the maximum height property O(log n).",
+      "max_marks": 25.0,
+      "model_answer": "A Red-Black Tree maintains balance via five primary invariants: (1) Every node is red or black, (2) The root is black, (3) Every leaf (NIL) is black, (4) If a node is red, both children are black (no consecutive red nodes), and (5) All simple paths from any node to descendant leaves contain the same black-height bh(x). When inserting a red node, violations occur if its parent is red. If the uncle node is red, a color flip recolors parent and uncle black and grandparent red. If the uncle is black and there is an angle (zig-zag), a rotation aligns it into a straight line, followed by another rotation and recoloring. The maximum height is at most 2*log2(n+1) because the longest path (alternating red-black) cannot exceed twice the shortest path (all black), guaranteeing O(log n) search, insertion, and deletion times.",
+      "key_concepts": [
+        "red-black invariants",
+        "black-height",
+        "uncle node",
+        "color flip",
+        "tree rotations (single and double)",
+        "height bound 2*log(n+1)"
+      ],
+      "rubrics": [
+        {
+          "id": "r1000001-0000-0000-0000-000000000001",
+          "criterion_name": "Invariants & Core Theory",
+          "description": "Accurate enumeration and explanation of Red-Black properties including black-height consistency.",
+          "max_points": 8.0,
+          "weight": 1.0,
+          "levels": [
+            { "name": "Exemplary", "points": 8.0, "descriptor": "All 5 invariants accurately articulated with black-height formalization." },
+            { "name": "Proficient", "points": 6.0, "descriptor": "Mentions primary invariants with minor omissions in leaf definitions." },
+            { "name": "Developing", "points": 3.0, "descriptor": "Vague understanding; confuses AVL balance factors with color properties." }
+          ]
+        },
+        {
+          "id": "r1000002-0000-0000-0000-000000000002",
+          "criterion_name": "Insertion Rebalancing Logic",
+          "description": "Clear distinction between uncle-red (recoloring) and uncle-black (single/double rotations).",
+          "max_points": 10.0,
+          "weight": 1.0,
+          "levels": [
+            { "name": "Exemplary", "points": 10.0, "descriptor": "Complete case breakdown for uncle red vs black, identifying left-right zig-zag and line structures." },
+            { "name": "Proficient", "points": 7.0, "descriptor": "Explains color flip and rotation, missing one rotational orientation." },
+            { "name": "Developing", "points": 4.0, "descriptor": "Mentions rotation but fails to classify uncle condition." }
+          ]
+        },
+        {
+          "id": "r1000003-0000-0000-0000-000000000003",
+          "criterion_name": "Mathematical Height Proof",
+          "description": "Proof of the upper height bound 2*log2(n+1) and asymptotic time complexity.",
+          "max_points": 7.0,
+          "weight": 1.0,
+          "levels": [
+            { "name": "Exemplary", "points": 7.0, "descriptor": "Rigorous inductive or black-height path bound proof establishing h <= 2*log(n+1)." },
+            { "name": "Proficient", "points": 5.0, "descriptor": "Explains why alternating red-black paths limit height to 2x without formal proof." },
+            { "name": "Developing", "points": 2.0, "descriptor": "Merely states O(log n) without substantiation." }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "q2222222-2222-2222-2222-222222222222",
+      "question_number": 2,
+      "question_text": "Describe the MESI cache coherence protocol. Outline the four states and explain what happens during a bus read and a bus write from the perspective of an invalidating snooping cache.",
+      "max_marks": 25.0,
+      "model_answer": "The MESI protocol is an invalidation-based snooping cache coherence protocol consisting of four states: Modified (line valid, present only in current cache, dirty and differs from memory), Exclusive (line valid, clean, matches memory, present only in this cache), Shared (line valid, clean, present in this and potentially other caches), and Invalid (line contains stale or unusable data). When a core performs a Read Miss, it issues a BusRd; if another cache has it in M, it flushes to memory and transitions to S, while the requesting core transitions to S or E (if no other cache had it). When a core performs a Write (BusRdX or BusInval), all other caches snooping this address transition their local copies to Invalid, ensuring serialized write visibility across SMP cores.",
+      "key_concepts": [
+        "Modified, Exclusive, Shared, Invalid states",
+        "BusRd and BusRdX snooping transactions",
+        "Dirty line write-back / cache flushing",
+        "Cache line invalidation",
+        "Coherence serialized visibility"
+      ],
+      "rubrics": [
+        {
+          "id": "r2000001-0000-0000-0000-000000000001",
+          "criterion_name": "State Taxonomy & Clean/Dirty Classification",
+          "description": "Definition of Modified, Exclusive, Shared, and Invalid states.",
+          "max_points": 10.0,
+          "weight": 1.0,
+          "levels": [
+            { "name": "Exemplary", "points": 10.0, "descriptor": "Accurately categorizes all 4 states with memory consistency and exclusivity flags." },
+            { "name": "Proficient", "points": 7.5, "descriptor": "Defines all 4 states with slight ambiguity around Exclusive vs Shared dirty policy." },
+            { "name": "Developing", "points": 4.0, "descriptor": "Leaves out 1 or more states or misinterprets Invalid." }
+          ]
+        },
+        {
+          "id": "r2000002-0000-0000-0000-000000000002",
+          "criterion_name": "Bus Snooping & Invalidation Transitions",
+          "description": "Dynamic transitions during BusRd and BusRdX / BusInval events.",
+          "max_points": 15.0,
+          "weight": 1.0,
+          "levels": [
+            { "name": "Exemplary", "points": 15.0, "descriptor": "Exact state machine transitions during read miss, write hit, and write miss snooping." },
+            { "name": "Proficient", "points": 11.0, "descriptor": "Understands invalidation on write, but omits flushing behavior of Modified lines." },
+            { "name": "Developing", "points": 6.0, "descriptor": "Incomplete transition matrix; confuses write-update with write-invalidate." }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
