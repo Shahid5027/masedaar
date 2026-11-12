@@ -233,6 +233,8 @@ def evaluate_submission(submission_id: str):
 
     return APIResponse(
         success=True,
+        module="ps2",
+        student_id=submission.get("student_id"),
         message=f"AI evaluation successfully completed for submission '{submission_id}'.",
         data={
             "submission_id": submission_id,
@@ -264,6 +266,8 @@ def get_evaluation(evaluation_id: str):
         )
     return APIResponse(
         success=True,
+        module="ps2",
+        student_id=record.get("student_id"),
         message="Evaluation record found",
         data=record
     )
